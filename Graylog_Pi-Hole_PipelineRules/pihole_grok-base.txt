@@ -1,4 +1,4 @@
-rule "pihole_grok"
+rule "pihole_grok-base"
 when
   NOT (contains(to_string($message.message), "validation result") || contains(to_string($message.message), "dnssec-query") || contains(to_string($message.message), "gravity blocked") || contains(to_string($message.message), "no DS") || contains(to_string($message.message), "special domain"))
 then
