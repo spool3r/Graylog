@@ -1,0 +1,49 @@
+rule "pihole_grok-noDS"
+when
+    contains(to_string($message.message), "no DS")
+then
+  let val = grok(
+    pattern:"%{NOTSPACE:host} %{NOTSPACE:logSystem} %{SYSLOGTIMESTAMP:eventTime} dnsmasq\\[%{NUMBER:dnsmasq}\\]\\: %{NUMBER:transactionID} %{NOTSPACE:eventType} %{URIHOST:query} (is|to|from) no DS",
+    value:to_string($message.message),
+    only_named_captures: true);
+  
+  set_field(
+    field:"host",
+    value:to_string(val["host"])
+  );
+  
+  set_field(
+    field:"logSystem",
+    value:to_string(val["logSystem"])
+  );
+  
+  set_field(
+    field:"eventTime",
+    value:to_string(val["eventTime"])
+  );
+  
+  set_field(
+    field:"dnsmasq",
+    value:to_string(val["dnsmasq"])
+  );
+  
+  set_field(
+    field:"transactionID",
+    value:to_string(val["transactionID"])
+  );
+  
+  set_field(
+    field:"eventType",
+    value:to_string(val["eventType"])
+  );
+  
+  set_field(
+    field:"query",
+    value:to_string(val["query"])
+  );
+  
+  set_field(
+    field:"response",
+    value:to_string("no DS")
+  );
+end

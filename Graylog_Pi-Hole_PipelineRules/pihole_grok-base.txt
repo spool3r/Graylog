@@ -1,0 +1,59 @@
+rule "pihole_grok"
+when
+  NOT (contains(to_string($message.message), "validation result") || contains(to_string($message.message), "dnssec-query") || contains(to_string($message.message), "gravity blocked") || contains(to_string($message.message), "no DS") || contains(to_string($message.message), "special domain"))
+then
+  let val = grok(
+    pattern:"%{NOTSPACE:host} %{NOTSPACE:logSystem} %{SYSLOGTIMESTAMP:eventTime} dnsmasq\\[%{NUMBER:dnsmasq}\\]\\: %{NUMBER:transactionID} %{IPV4:src_ip}\\/%{NUMBER:src_port} (%{NOTSPACE:eventType}|gravity blocked) %{NOTSPACE:query} (is|to|from) (%{IPV4:response}|%{GREEDYDATA:response})",
+    value:to_string($message.message),
+    only_named_captures: true);
+  
+  set_field(
+    field:"host",
+    value:to_string(val["host"])
+  );
+  
+  set_field(
+    field:"logSystem",
+    value:to_string(val["logSystem"])
+  );
+  
+  set_field(
+    field:"eventTime",
+    value:to_string(val["eventTime"])
+  );
+  
+  set_field(
+    field:"dnsmasq",
+    value:to_string(val["dnsmasq"])
+  );
+  
+  set_field(
+    field:"transactionID",
+    value:to_string(val["transactionID"])
+  );
+  
+  set_field(
+    field:"src_ip",
+    value:to_string(val["src_ip"])
+  );
+  
+  set_field(
+    field:"src_port",
+    value:to_string(val["src_port"])
+  );
+  
+  set_field(
+    field:"eventType",
+    value:to_string(val["eventType"])
+  );
+  
+  set_field(
+    field:"query",
+    value:to_string(val["query"])
+  );
+  
+  set_field(
+    field:"response",
+    value:to_string(val["response"])
+  );
+end
