@@ -1,2 +1,2 @@
 # Graylog
-Script and items relating to Graylog
+Scripts and items relating to Graylog
