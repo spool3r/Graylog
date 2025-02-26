@@ -1,0 +1,75 @@
+##
+%{NOTSPACE:host} %{NOTSPACE:logSystem} %{SYSLOGTIMESTAMP:eventTime} dnsmasq\[%{NUMBER:dnsmasq}\]\: (%{NOTSPACE:eventType}|gravity blocked|Apple iCloud Private Relay domain|special domain) %{GREEDYDATA:query} (is|to|from) %{GREEDYDATA:response}
+##
+pihole pihole Feb 26 02:47:14 dnsmasq[835]: cached link.storjshare.io is NODATA-IPv6
+pihole pihole Feb 26 02:47:14 dnsmasq[835]: cached update.ixsystems.com is <CNAME>
+
+pihole pihole Feb 26 02:47:14 dnsmasq[835]: cached-stale link.storjshare.io is 136.0.77.2
+
+pihole pihole Feb 26 02:47:14 dnsmasq[835]: reply link.storjshare.io is 136.0.77.2
+pihole pihole Feb 26 02:47:14 dnsmasq[835]: reply beam.scs.splunk.com is 18.238.176.119
+
+pihole pihole Feb 26 02:55:06 dnsmasq[835]: reply s-0005.dual-s-msedge.net is NODATA
+pihole pihole Feb 26 02:55:06 dnsmasq[835]: reply dual-s-0005-teams.config.skype.com is <CNAME>
+
+pihole pihole Feb 26 02:47:14 dnsmasq[835]: forwarded update.ixsystems.com to 208.67.220.220
+
+pihole pihole Feb 26 02:47:14 dnsmasq[835]: query[AAAA] update.ixsystems.com from 172.16.24.166
+pihole pihole Feb 26 02:47:14 dnsmasq[835]: query[A] update.ixsystems.com from 172.16.24.166
+pihole pihole Feb 26 02:55:07 dnsmasq[835]: query[PTR] 2.8.4.d.b.0.2.4.5.c.f.b.2.4.4.0.f.4.7.8.a.0.5.3.c.5.2.f.5.7.d.f.ip6.arpa from 172.16.24.135
+pihole pihole Feb 26 02:55:07 dnsmasq[835]: query[PTR] 135.24.16.172.in-addr.arpa from 172.16.24.135
+pihole pihole Feb 26 02:58:24 dnsmasq[835]: query[HTTPS] _8006._https.node-c.reinke.fun.lan from 172.16.24.130
+pihole pihole Feb 26 02:57:49 dnsmasq[835]: query[SRV] _kerberos._http.lps.net from 172.16.24.143
+
+pihole pihole Feb 26 02:55:07 dnsmasq[835]: config fd75:f25c:350a:874f:442:bfc5:420b:d482 is NXDOMAIN
+pihole pihole Feb 26 03:00:58 dnsmasq[835]: config mqtt.nafta.fcagsdp.com.lan is NXDOMAIN
+
+pihole pihole Feb 26 03:04:42 dnsmasq[835]: validation result is INSECURE
+
+pihole pihole Feb 26 03:05:12 dnsmasq[835]: gravity blocked app-analytics-v2.snapchat.com is 0.0.0.0
+
+pihole pihole Feb 26 03:06:29 dnsmasq[835]: dnssec-query[DS] digicert.com to 208.67.220.220
+pihole pihole Feb 26 03:05:38 dnsmasq[835]: dnssec-query[DNSKEY] edgeapi.slack.com to 208.67.220.220
+pihole pihole Feb 26 03:48:42 dnsmasq[835]: dnssec-retry[DS] pinterest.net to 208.67.220.220
+pihole pihole Feb 26 00:23:55 dnsmasq[835]: dnssec-retry[DNSKEY] allesedv.at to 208.67.220.220
+
+pihole pihole Feb 26 03:09:08 dnsmasq[835]: DHCP 172.16.24.135 is macbook-pro.lan
+pihole pihole Feb 26 03:08:42 dnsmasq[835]: DHCP truenas.lan is 172.16.24.166
+
+pihole pihole Feb 26 03:10:37 dnsmasq[835]: Apple iCloud Private Relay domain mask-h2.icloud.com is NXDOMAIN
+
+pihole pihole Feb 26 04:26:21 dnsmasq[835]: special domain mask.icloud.com is NXDOMAIN
+
+##
+%{NOTSPACE:host} %{NOTSPACE:logSystem} %{SYSLOGTIMESTAMP:eventTime} dnsmasq-dhcp\[%{NUMBER:dnsmasq}\]\: %{NOTSPACE:eventType}\(%{NOTSPACE:NIC}\) %{IPV4:src_ip} %{COMMONMAC:src_mac}( %{NOTSPACE:device_name})?
+##
+
+pihole pihole Feb 26 03:12:35 dnsmasq-dhcp[835]: DHCPACK(ens18) 172.16.24.166 d4:ae:52:b7:a6:19 truenas
+pihole pihole Feb 26 03:10:29 dnsmasq-dhcp[835]: DHCPACK(ens18) 172.16.24.119 62:d6:26:d4:1d:92
+
+pihole pihole Feb 26 03:14:19 dnsmasq-dhcp[835]: DHCPREQUEST(ens18) 172.16.24.135 60:3e:5f:80:43:5f
+
+pihole pihole Feb 26 04:27:09 dnsmasq-dhcp[835]: DHCPOFFER(ens18) 172.16.24.149 58:e4:03:99:ff:f4
+
+##
+%{NOTSPACE:host} %{NOTSPACE:logSystem} %{TIMESTAMP_ISO8601:timezone} %{NOTSPACE:timezone} \[%{NUMBER:piFTL_event}/%{NOTSPACE:piFTL_unknown}\] %{WORD:log_level}: %{GREEDYDATA:log_message}
+##
+
+pihole piFTL 2025-02-26 03:07:08.229 UTC [835/T931] INFO: Round-trip delay: 6.903608e+01 ms (excluded 1 outliers)
+pihole piFTL 2025-02-26 03:07:08.229 UTC [835/T931] INFO: Received 8/8 valid NTP replies from pool.ntp.org
+
+##
+%{NOTSPACE:host} %{NOTSPACE:logSystem}\[%{NUMBER:event_id}\]: %{GREEDYDATA:log_message}
+##
+
+pihole CRON[4393]: pam_unix(cron:session): session opened for user root(uid=0) by root(uid=0)
+pihole CRON[4366]: pam_unix(cron:session): session closed for user root
+pihole CRON[4367]: (root) CMD (command -v debian-sa1 > /dev/null && debian-sa1 1 1)
+pihole CRON[4366]: pam_unix(cron:session): session opened for user root(uid=0) by root(uid=0)
+
+pihole systemd[1]: Finished sysstat-collect.service - system activity accounting tool.
+pihole systemd[1]: sysstat-collect.service: Deactivated successfully.
+
+pihole sshd[2508]: Connection closed by 172.16.24.215 port 50144
+pihole sshd[2507]: Connection closed by 172.16.24.215 port 50130
+pihole sshd[2506]: Server listening on :: port 22.
