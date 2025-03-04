@@ -52,7 +52,7 @@ pihole pihole Feb 26 03:14:19 dnsmasq-dhcp[835]: DHCPREQUEST(ens18) 172.16.24.13
 pihole pihole Feb 26 04:27:09 dnsmasq-dhcp[835]: DHCPOFFER(ens18) 172.16.24.149 58:e4:03:99:ff:f4
 
 ##
-%{NOTSPACE:host} %{NOTSPACE:logSystem} %{TIMESTAMP_ISO8601:eventTime} %{NOTSPACE:timezone} \[%{NUMBER:piFTL_event}/%{NOTSPACE:piFTL_unknown}\] %{WORD:log_level}: %{GREEDYDATA:log_message}
+%{NOTSPACE:host} %{NOTSPACE:logSystem} %{TIMESTAMP_ISO8601:eventTime} %{NOTSPACE:timezone} \[%{NUMBER:piFTL_event}/%{NOTSPACE:piFTL_subevent}\] %{WORD:log_level}: %{GREEDYDATA:log_message}
 ##
 
 pihole piFTL 2025-02-26 03:07:08.229 UTC [835/T931] INFO: Round-trip delay: 6.903608e+01 ms (excluded 1 outliers)
