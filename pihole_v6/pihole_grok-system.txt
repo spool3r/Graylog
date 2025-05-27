@@ -1,0 +1,29 @@
+rule "pihole_grok-system"
+when
+  NOT (contains(to_string($message.message), "dnsmasq") || contains(to_string($message.message), "dnsmasq-dhcp") || contains(to_string($message.message), "INFO:"))
+then
+  let val = grok(
+    pattern:"%{NOTSPACE:host} %{NOTSPACE:logSystem}\\[%{NUMBER:event_id}\\]: %{GREEDYDATA:log_message}",
+    value:to_string($message.message),
+    only_named_captures: true);
+  
+  set_field(
+    field:"host",
+    value:to_string(val["host"])
+  );
+  
+  set_field(
+    field:"logSystem",
+    value:to_string(val["logSystem"])
+  );
+  
+  set_field(
+    field:"event_id",
+    value:to_string(val["event_id"])
+  );
+  
+  set_field(
+    field:"log_message",
+    value:to_string(val["log_message"])
+  );
+end

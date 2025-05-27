@@ -1,0 +1,44 @@
+rule "pihole_grok-base"
+when
+  contains(to_string($message.message), "dnsmasq")
+then
+  let val = grok(
+    pattern:"%{NOTSPACE:host} %{NOTSPACE:logSystem} %{SYSLOGTIMESTAMP:eventTime} dnsmasq\\[%{NUMBER:dnsmasq}\\]\\: (%{NOTSPACE:eventType}|gravity blocked|Apple iCloud Private Relay domain|special domain) %{GREEDYDATA:query} (is|to|from) %{GREEDYDATA:response}",
+    value:to_string($message.message),
+    only_named_captures: true);
+  
+  set_field(
+    field:"host",
+    value:to_string(val["host"])
+  );
+  
+  set_field(
+    field:"logSystem",
+    value:to_string(val["logSystem"])
+  );
+  
+  set_field(
+    field:"eventTime",
+    value:to_string(val["eventTime"])
+  );
+  
+  set_field(
+    field:"dnsmasq",
+    value:to_string(val["dnsmasq"])
+  );
+  
+  set_field(
+    field:"eventType",
+    value:to_string(val["eventType"])
+  );
+  
+  set_field(
+    field:"query",
+    value:to_string(val["query"])
+  );
+  
+  set_field(
+    field:"response",
+    value:to_string(val["response"])
+  );
+end

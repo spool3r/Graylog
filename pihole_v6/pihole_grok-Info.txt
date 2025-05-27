@@ -1,0 +1,49 @@
+rule "pihole_grok-Info"
+when
+  contains(to_string($message.message), "INFO:")
+then
+  let val = grok(
+    pattern:"%{NOTSPACE:host} %{NOTSPACE:logSystem} %{TIMESTAMP_ISO8601:eventTime} %{NOTSPACE:timezone} \\[%{NUMBER:piFTL_event}/%{NOTSPACE:piFTL_subevent}\\] %{WORD:log_level}: %{GREEDYDATA:log_message}",
+    value:to_string($message.message),
+    only_named_captures: true);
+  
+  set_field(
+    field:"host",
+    value:to_string(val["host"])
+  );
+  
+  set_field(
+    field:"logSystem",
+    value:to_string(val["logSystem"])
+  );
+  
+  set_field(
+    field:"eventTime",
+    value:to_string(val["eventTime"])
+  );
+  
+  set_field(
+    field:"timezone",
+    value:to_string(val["timezone"])
+  );
+  
+  set_field(
+    field:"piFTL_event",
+    value:to_string(val["piFTL_event"])
+  );
+  
+  set_field(
+    field:"piFTL_subevent",
+    value:to_string(val["piFTL_subevent"])
+  );
+  
+  set_field(
+    field:"log_level",
+    value:to_string(val["log_level"])
+  );
+  
+  set_field(
+    field:"log_message",
+    value:to_string(val["log_message"])
+  );
+end
