@@ -1,6 +1,6 @@
 rule "pihole_grok-base"
 when
-  NOT contains(to_string($message.message), "gravity blocked") || contains(to_string($message.message), "Apple iCloud Private Relay domain") || contains(to_string($message.message), "query[") || contains(to_string($message.message), "special domain") && contains(to_string($message.message), "dnsmasq")
+  contains(to_string($message.message), "dnsmasq")
 then
   let val = grok(
     pattern:"%{NOTSPACE:host} %{NOTSPACE:logSystem} %{SYSLOGTIMESTAMP:eventTime} dnsmasq\\[%{NUMBER:dnsmasq}\\]\\: (%{NOTSPACE:eventType}) %{GREEDYDATA:query} (is|to|from) %{GREEDYDATA:response}",
