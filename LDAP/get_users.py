@@ -23,8 +23,8 @@ def query_active_directory():
     BIND_USER = f"{AD_USER}@{domain_name}"
     
     # Uncomment for Secure LDAP connection. Make sure to get Certificate for your AD and either rename it to ca_cert.cer or change the file name in the config.ini
-    # tls_config = Tls(validate=ssl.CERT_REQUIRED, ca_certs_file=CA_CERT_FILE)
-    # server = Server(AD_SERVER, get_info=ALL, use_ssl=True, tls=tls_config)
+    tls_config = Tls(validate=ssl.CERT_REQUIRED, ca_certs_file=CA_CERT_FILE)
+    server = Server(AD_SERVER, get_info=ALL, use_ssl=True, tls=tls_config)
     
     # Uncomment if you want to use a not secure connection to your LDAP. If using a this method, create a blank file called ca_cert.cer
     # server = Server(AD_SERVER, get_info=ALL, use_ssl=False)
@@ -101,9 +101,67 @@ def query_active_directory():
 if __name__ == "__main__":
     users = query_active_directory()
     if users:
-        output_filename = 'ad_users.json'
+
+        config = configparser.ConfigParser()
+        config.read('config.ini')
+        output_filename = config.get('output_files', 'users_json')
+        output_json_in_csv_filename = config.get('output_files', 'users_json_in_csv')
+        csv_key_column = config.get('output_files', 'csv_key_column')
+
         with open(output_filename, 'w', encoding='utf-8') as f:
             json.dump(users, f, indent=4, ensure_ascii=False)
         print(f"✅ Successfully exported {len(users)} user accounts to '{output_filename}'")
+
+        print(f"Saving user data as JSON inside of CSV file '{output_json_in_csv_filename}'")
+        import csv
+        with open(output_json_in_csv_filename, 'w') as csvfile:
+            csvwriter = csv.writer(csvfile
+                                    , delimiter='#'
+                                    , quotechar='\''
+                                    , quoting=csv.QUOTE_MINIMAL
+                                    )
+            csvwriter.writerow([csv_key_column, 'json_ad_user'])
+
+            i = 0
+            max = 100000
+            for userobj in users:
+                i = i + 1
+
+                if i > max:
+                    break
+                
+                if csv_key_column in userobj:
+                    if "memberOf" in userobj and userobj["memberOf"]:
+                        l_member_of = []
+                        if isinstance(userobj["memberOf"], list):
+                            # l_member_of = userobj["memberOf"]
+                            for listitem in userobj["memberOf"]:
+                                l_member_of.append(listitem.replace("\\", ""))
+                        else:
+                            l_member_of.append(userobj["memberOf"].replace("\\", ""))
+                        
+                        if len(l_member_of) == 1:
+                            userobj["memberOf"] = l_member_of[0]
+                        elif len(l_member_of) == 0:
+                            userobj["memberOf"] = ""
+                        else:
+                            userobj["memberOf"] = l_member_of
+                        
+                    json_vals = json.dumps(userobj)
+
+                    csvwriter.writerow([userobj[csv_key_column], json_vals])
+
+        if i > 0:
+            print(f"✅ Successfully exported {i} user accounts as JSON inside of CSV file '{output_json_in_csv_filename}'")
+            print("".join([
+                "CSV Config: "
+                , "\n", "    ", "Separator: #"
+                , "\n", "    ", "Quote character: '"
+                , "\n", "    ", "Key column: sAMAccountName"
+                , "\n", "    ", "Value column: json_ad_user"
+            ]))
+        else:
+            print(f"Failed to export any users to '{output_json_in_csv_filename}'")
+
     else:
         print("❌ No users were exported. Please check the logs for errors.")
