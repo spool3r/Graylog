@@ -106,14 +106,75 @@ if __name__ == "__main__":
         config.read('config.ini')
         output_filename = config.get('output_files', 'users_json')
         output_json_in_csv_filename = config.get('output_files', 'users_json_in_csv')
+        output_normal_output_in_csv = config.get('output_files', 'normal_output_in_csv')
         csv_key_column = config.get('output_files', 'csv_key_column')
 
         with open(output_filename, 'w', encoding='utf-8') as f:
             json.dump(users, f, indent=4, ensure_ascii=False)
         print(f"✅ Successfully exported {len(users)} user accounts to '{output_filename}'")
 
-        print(f"Saving user data as JSON inside of CSV file '{output_json_in_csv_filename}'")
+        print("")
+        print(f"Saving user data as ROWS inside of CSV file '{output_normal_output_in_csv}'")
         import csv
+
+        with open(output_normal_output_in_csv, 'w') as csvfile:
+            # for CSV constants see
+            #   https://docs.python.org/3/library/csv.html#csv-constants
+            csvwriter = csv.writer(csvfile
+                                    , delimiter=','
+                                    , quotechar='"'
+                                    , quoting=csv.QUOTE_ALL
+                                    )
+            i = 0
+            max = 100000
+            for userobj in users:
+                i = i + 1
+
+                if i == 1:
+                    l_col_keys = []
+                    for attr in userobj:
+                        l_col_keys.append(attr)
+                    csvwriter.writerow(l_col_keys)
+
+                if i > max:
+                    break
+
+                l_tmp = []
+                for attr in userobj:
+                    # print(f"attr: {attr}")
+                    l_tmp.append(userobj[attr])
+                csvwriter.writerow(l_tmp)
+        
+        if i > 0:
+            i_concat_col_keys = 0
+            s_concat_col_keys = ""
+            for col_key in l_col_keys:
+                if not str(col_key) == str(csv_key_column):
+                    if i_concat_col_keys > 0:
+                        s_concat_col_keys = "".join([
+                        s_concat_col_keys
+                        , ", "
+                    ])
+
+                    s_concat_col_keys = "".join([
+                        s_concat_col_keys
+                        , col_key
+                    ])
+                    i_concat_col_keys = i_concat_col_keys + 1
+
+            print(f"✅ Successfully exported {i} user accounts as ROWS inside of CSV file '{output_normal_output_in_csv}'")
+            print("".join([
+                "CSV Config: "
+                , "\n", "    ", "Separator: ,"
+                , "\n", "    ", "Quote character: \""
+                , "\n", "    ", "Key column: ", str(csv_key_column)
+                , "\n", "    ", "Value column: ", str(s_concat_col_keys)
+            ]))
+        else:
+            print(f"Failed to export any users to '{output_json_in_csv_filename}'")
+
+        print("")
+        print(f"Saving user data as JSON inside of CSV file '{output_json_in_csv_filename}'")
         with open(output_json_in_csv_filename, 'w') as csvfile:
             csvwriter = csv.writer(csvfile
                                     , delimiter='#'
@@ -157,7 +218,7 @@ if __name__ == "__main__":
                 "CSV Config: "
                 , "\n", "    ", "Separator: #"
                 , "\n", "    ", "Quote character: '"
-                , "\n", "    ", "Key column: sAMAccountName"
+                , "\n", "    ", "Key column: ", str(csv_key_column)
                 , "\n", "    ", "Value column: json_ad_user"
             ]))
         else:
